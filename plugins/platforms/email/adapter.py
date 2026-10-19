@@ -499,6 +499,10 @@ class EmailAdapter(BasePlatformAdapter):
         self._thread_context: dict[str, dict[str, str]] = {}
         logger.info("[Email] Adapter initialized for %s", self._address)
 
+    def _should_auto_tts_for_chat(self, chat_id: str) -> bool:
+        """Email has no voice delivery: require an explicit chat opt-in, not the global default."""
+        return chat_id in self._auto_tts_enabled_chats
+
     def _trim_seen_uids(self) -> None:
         """Keep only the highest half of UIDs once over the cap (UIDs are monotonic; UNSEEN prevents re-delivery)."""
         if len(self._seen_uids) <= self._seen_uids_max:
